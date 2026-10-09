@@ -105,6 +105,14 @@ select#netSel{background:var(--panel);border:1px solid var(--line2);border-radiu
 .g-actions{display:flex;gap:8px;margin-top:9px;flex-wrap:wrap}
 footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
 footer a{color:var(--accent2)}
+
+.proof{display:block;max-width:440px;margin-top:18px;padding:16px 18px;background:var(--panel);border:1px solid var(--line2);border-radius:8px}
+.proof-title{font-family:ui-monospace,'Courier New',monospace;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.proof-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-family:ui-monospace,'Courier New',monospace;font-size:12px;color:var(--muted)}
+.proof-grid .val{color:var(--accent);overflow-wrap:anywhere}
+.proof-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.proof-link{font-family:ui-monospace,'Courier New',monospace;font-size:11px;color:var(--accent);border-bottom:1px solid var(--accent);text-decoration:none}
+.proof-link:hover{opacity:.85}
 </style>
 </head>
 <body>
@@ -197,12 +205,21 @@ footer a{color:var(--accent2)}
 </div>
 </div>
 
-<footer>
-<div class="proof" style="display:grid;grid-template-columns:auto 1fr;gap:8px 18px;background:var(--panel);border:1px solid var(--line2);border-radius:12px;padding:18px 20px">
-<span>Contract</span><b class="mono" style="color:var(--accent2);overflow-wrap:anywhere">0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74</b>
-<span>Explorer</span><b><a class="mono" style="color:var(--accent2)" href="https://scan.bohr.life/address/0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74" target="_blank" rel="noopener">scan.bohr.life ✓ verified</a></b>
+<footer><div class="wrap">
+<p style="margin-bottom:2px">Checkmate — wagered chess on BOT Chain. Testnet deployment; test wagers have no monetary value.</p>
+<div class="proof">
+<div class="proof-title">Proof on BOT Chain Testnet</div>
+<div class="proof-grid">
+<span>Chain ID</span><span class="val">968</span>
+<span>Checkmate</span><span class="val">0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74</span>
+<span>Wager</span><span class="val">native BOT</span>
 </div>
-</footer>
+<div class="proof-links">
+<a href="https://botchain.ai" target="_blank" rel="noopener" class="proof-link">BOT Chain Website &#8599;</a>
+<a href="https://scan.bohr.life/address/0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74" target="_blank" rel="noopener" class="proof-link">View contract on Explorer &#8599;</a>
+</div>
+</div>
+</div></footer>
 
 <script type="importmap">
 {"imports":{"ethers":"https://esm.sh/ethers@6.13.2","@reown/appkit":"https://esm.sh/@reown/appkit@1.8.21","@reown/appkit-adapter-ethers":"https://esm.sh/@reown/appkit-adapter-ethers@1.8.21","chess.js":"https://esm.sh/chess.js@1.4.0"}}
