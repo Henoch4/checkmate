@@ -125,7 +125,7 @@ claimTimeout(id)   no move for 24h → side to move loses</pre>
 
 <section id="demo">
 <h2>Demo activity</h2>
-<p>Six mainnet demo transactions executed after deployment — all status ok, all methods decode by name on BOTScan. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
+<p>Nine mainnet demo transactions executed after deployment — all status ok, all methods decode by name on BOTScan. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>. A second game brings a third wallet onto the contract and settles by resignation.</p>
 <table>
 <tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th><th>Tx</th></tr>
 <tr><td>1</td><td class="mono">createGame</td><td>Wallet A · White</td><td>Challenge with 0.005 BOT wager, standard start FEN</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xd21ba85d4cc71c1c4818647b674ecac2217d29916eb00371ad86ffcdbcedf50e" target="_blank" rel="noopener">0xd21ba85d…f50e</a></td></tr>
@@ -134,8 +134,11 @@ claimTimeout(id)   no move for 24h → side to move loses</pre>
 <tr><td>4</td><td class="mono">submitMove</td><td>Wallet B</td><td>1… e5</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x5dfc36c1fcc078d0f9fe985cfcfa1682fe3acadc0f9c17af3cfa43a9dd19a628" target="_blank" rel="noopener">0x5dfc36c1…a628</a></td></tr>
 <tr><td>5</td><td class="mono">submitMove</td><td>Wallet A</td><td>2. g4</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x07139682dcdd3d5ebd24c2c9a714cc69a1b9e16a347eae08fa0e2532b3488582" target="_blank" rel="noopener">0x07139682…8582</a></td></tr>
 <tr><td>6</td><td class="mono">submitMove</td><td>Wallet B</td><td>2… Qh4# — checkmate, Black collects 0.01 BOT</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xeeb551c65775b5cba005093a5e560c296ab21fb9893dc69a67d481872a414e76" target="_blank" rel="noopener">0xeeb551c6…4e76</a></td></tr>
+<tr><td>7</td><td class="mono">createGame</td><td>Wallet B · White</td><td>Second challenge: 0.005 BOT wager vs Wallet C</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x1c223d6366b42f58322b0eada3c997aba4c945e085614f9ef910319100033abd" target="_blank" rel="noopener">0x1c223d63…3abd</a></td></tr>
+<tr><td>8</td><td class="mono">joinGame</td><td>Wallet C · Black</td><td>Wallet C matches the wager — third wallet on the contract</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x8bac06a0d16b53b6502c500dc363204d2caf8f70091af2931a4a362b8dfa1f22" target="_blank" rel="noopener">0x8bac06a0…1f22</a></td></tr>
+<tr><td>9</td><td class="mono">resign</td><td>Wallet C</td><td>C resigns game #1 — Wallet B collects 0.01 BOT</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xdfde8154f494b5819f78c8a296cb9ae50066f93b931e40fee206bd110c1c52b3" target="_blank" rel="noopener">0xdfde8154…52b3</a></td></tr>
 </table>
-<p>Each project contract carries 7 mainnet explorer transactions: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
+<p>The contract carries 10 mainnet explorer transactions: 1 deploy + 9 demo across three wallets. Finished games #0 and #1 are visible live in the app.</p>
 </section>
 
 <section id="build">
