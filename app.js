@@ -37,7 +37,7 @@ const CM_ABI = [
   'event GameFinished(uint256 indexed gameId, address indexed winner, uint256 wager, string reason)',
 ];
 
-const CONTRACTS = { 968: { cm: '0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74' } };
+const CONTRACTS = { 968: { cm: '0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74' }, 677: { cm: '0x222D901AFE6381CE2529b5B9124091a137b4c9bd' } };
 
 const $ = (id) => document.getElementById(id);
 const fmt = (n, d = 18) => Number(ethers.formatUnits(n, d)).toLocaleString(undefined, { maximumFractionDigits: 4 });
@@ -45,7 +45,7 @@ const short = (a) => a.slice(0, 6) + '…' + a.slice(-4);
 
 let appkit = null;
 let readProvider;
-let currentChainId = 968;
+let currentChainId = 677;
 let account = null;
 
 let games = [];
@@ -414,7 +414,7 @@ async function selectGame(id) {
 
 async function signerOrAlert() {
   if (!account) { appkit?.open(); return null; }
-  if (currentChainId !== 968) { alert('Checkmate is deployed on Testnet 968. Switch network in your wallet.'); return null; }
+  if (!CONTRACTS[currentChainId]) { alert('No contracts on this network in this app. Switch to BOT Chain 677 or Testnet 968.'); return null; }
   const s = await appkit?.getSigner();
   if (!s) { appkit?.open(); return null; }
   return s;
@@ -527,7 +527,7 @@ async function doSubmit() {
 /* ---------------- boot ---------------- */
 
 function boot() {
-  readProvider = new ethers.JsonRpcProvider('https://rpc.bohr.life');
+  readProvider = new ethers.JsonRpcProvider(currentChainId === 677 ? 'https://rpc.botchain.ai' : 'https://rpc.bohr.life');
   initAppKit();
   $('board')?.addEventListener('click', (e) => {
     const sq = e.target.closest('.sq');

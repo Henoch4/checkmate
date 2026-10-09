@@ -64,7 +64,7 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px}
 <div class="wrap">
 <div class="docs-head">
 <h1>Checkmate Docs</h1>
-<p>Wagered chess on BOT Chain testnet (chain 968).</p>
+<p>Wagered chess on BOT Chain mainnet (chain 677).</p>
 <div class="toc">
 <a href="#deploy">Deployment</a><a href="#rules">Game rules</a><a href="#abi">Contract API</a><a href="#demo">Demo activity</a><a href="#build">Build &amp; verify</a>
 </div>
@@ -73,8 +73,8 @@ footer{padding:36px 0 56px;color:var(--muted);font-size:13px}
 <section id="deploy">
 <h2>Deployment</h2>
 <div class="addr-box">
-<div class="k">Chain</div><div class="v">BOT Chain Testnet · chainId 968 · RPC https://rpc.bohr.life · explorer https://scan.bohr.life</div>
-<div class="k">Checkmate</div><div class="v"><a href="https://scan.bohr.life/address/0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74" target="_blank" rel="noopener">0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74</a> · verified ✓</div>
+<div class="k">Chain</div><div class="v">BOT Chain Mainnet · chainId 677 · RPC https://rpc.botchain.ai · explorer https://scan.botchain.ai</div>
+<div class="k">Checkmate</div><div class="v"><a href="https://scan.botchain.ai/address/0x222D901AFE6381CE2529b5B9124091a137b4c9bd" target="_blank" rel="noopener">0x222D901AFE6381CE2529b5B9124091a137b4c9bd</a> · verified ✓</div>
 <div class="k">Compiler</div><div class="v">solc 0.8.30+commit.73712a01 · optimizer 200 runs · evmVersion cancun · metadata.bytecodeHash none · flattened-code verification</div>
 <div class="k">Wager asset</div><div class="v">native BOT (msg.value) — both players stake equally at create/join</div>
 <div class="k">Client</div><div class="v">chess.js 1.4.0 (esm.sh) for move legality, SAN and FEN — runs entirely in the browser</div>
@@ -125,7 +125,7 @@ claimTimeout(id)   no move for 24h → side to move loses</pre>
 
 <section id="demo">
 <h2>Demo activity</h2>
-<p>Six demo transactions executed after deployment — all status ok, all methods decode by name on the explorer. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
+<p>Six testnet demo transactions executed after deployment — all status ok, all methods decode by name on the explorer. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
 <table>
 <tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th></tr>
 <tr><td>1</td><td class="mono">createGame</td><td>Wallet A · White</td><td>Challenge with 0.1 BOT wager, standard start FEN</td></tr>
@@ -135,31 +135,31 @@ claimTimeout(id)   no move for 24h → side to move loses</pre>
 <tr><td>5</td><td class="mono">submitMove</td><td>Wallet A</td><td>2. g4</td></tr>
 <tr><td>6</td><td class="mono">submitMove</td><td>Wallet B</td><td>2… Qh4# — checkmate, Black collects 0.2 BOT</td></tr>
 </table>
-<p>Each project contract carries 7 explorer transactions total: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
+<p>Each project contract carries 7 testnet explorer transactions: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
 </section>
 
 <section id="build">
 <h2>Build &amp; verify</h2>
 <pre>cd botchain-builds/agent-vault
 node build5.mjs              # solc 0.8.30 → artifacts/checkmate/*.bin|.abi
-node deploy-5-testnet.mjs    # deploy to chain 968 → deployed-testnet-5.json
-node checkmate-demo.mjs      # funding + 6 demo txs (game ends Qh4#)
+node deploy-5-mainnet.mjs    # deploy to chain 677 → deployed-mainnet-5.json
+node checkmate-demo-mainnet.mjs      # funding + 6 demo txs (game ends Qh4#)
 node make-flat-5.mjs         # SPDX-dedupe flatten + byte-match recompile
-node submit-verify-5.mjs Checkmate   # POST flattened-code → scan.bohr.life</pre>
-<p>Flatten output lives in <code>agent-vault/verify5/*.flat.sol</code>. Each flat was recompiled and byte-matched against the deployed runtime before submission (<code>FLAT MATCH</code> ×7).</p>
+node submit-verify-5-mainnet.mjs Checkmate   # POST flattened-code → scan.botchain.ai</pre>
+<p>Flatten output lives in <code>agent-vault/verify5/*.flat.sol</code>. Each flat was recompiled and byte-matched against the deployed runtime before submission (<code>FLAT MATCH</code> ×6).</p>
 </section>
 
 <footer><div class="wrap">
-<p style="margin-bottom:2px">Checkmate — wagered chess on BOT Chain. Testnet deployment; test wagers have no monetary value.</p>
+<p style="margin-bottom:2px">Checkmate — wagered chess on BOT Chain. Live on mainnet; real wagers with real value.</p>
 <div class="proof">
-<div class="proof-title">Proof on BOT Testnet</div>
+<div class="proof-title">Proof on BOT Mainnet</div>
 <div class="proof-grid">
-<span>Chain ID</span><span class="val">968</span>
-<span>Contract</span><span class="val">0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74</span>
+<span>Chain ID</span><span class="val">677</span>
+<span>Contract</span><span class="val">0x222D901AFE6381CE2529b5B9124091a137b4c9bd</span>
 </div>
 <div class="proof-links">
 <a href="https://botchain.ai" target="_blank" rel="noopener" class="proof-link">BOT Chain Website &#8599;</a>
-<a href="https://scan.bohr.life/address/0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74" target="_blank" rel="noopener" class="proof-link">BOTScan Explorer &#8599;</a>
+<a href="https://scan.botchain.ai/" target="_blank" rel="noopener" class="proof-link">BOTScan Explorer &#8599;</a>
 </div>
 </div>
 </div></footer>
