@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkmate — Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a120c;--panel:#101a13;--panel2:#16241a;--accent:#769656;--accent2:#8faa6d;--text:#ecf3e8;--muted:#87a08c;--line:rgba(236,243,232,.09);--line2:rgba(236,243,232,.18)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.6;min-height:100vh}
+a{color:var(--accent2);text-decoration:none}
+a:hover{text-decoration:underline}
+.mono{font-family:'Courier New',monospace}
+.wrap{max-width:880px;margin:0 auto;padding:0 24px}
+nav{border-bottom:1px solid var(--line);background:rgba(10,18,12,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+.nav-in{max-width:1120px;margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px;font-family:'Fraunces',serif}
+.logo i{width:26px;height:26px;border-radius:6px;background:var(--accent);color:#0a120c;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-style:normal;line-height:1}
+.nav-links{display:flex;gap:22px;font-size:13.5px;color:var(--muted);align-items:center}
+.nav-links a:hover,.nav-links a.on{color:var(--accent2)}
+.docs-head{padding:56px 0 34px;border-bottom:1px solid var(--line)}
+.docs-head h1{font-size:34px;font-weight:900;letter-spacing:-.02em;margin-bottom:8px;font-family:'Fraunces',serif}
+.docs-head p{color:var(--muted);font-size:15px}
+.toc{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px;font-size:13px}
+section{padding:36px 0;border-bottom:1px solid var(--line)}
+section:last-of-type{border-bottom:none}
+h2{font-size:21px;font-weight:700;margin-bottom:14px;font-family:'Fraunces',serif}
+h3{font-size:15px;font-weight:700;margin:22px 0 8px;color:var(--accent2);font-family:'Inter',sans-serif}
+p{color:var(--muted);margin-bottom:12px;font-size:14.5px}
+table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13.5px}
+th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line)}
+th{color:var(--muted);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+td{color:var(--text)}
+td.mono,th.mono{font-family:'Courier New',monospace}
+code{background:var(--panel2);border:1px solid var(--line);border-radius:5px;padding:1.5px 6px;font-family:'Courier New',monospace;font-size:13px;color:var(--accent2)}
+pre{background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:16px 18px;overflow-x:auto;font-family:'Courier New',monospace;font-size:13px;color:var(--text);margin:12px 0;line-height:1.5}
+.addr-box{background:var(--panel);border:1px solid var(--line2);border-radius:10px;padding:16px 18px;margin:14px 0;display:grid;grid-template-columns:130px 1fr;gap:10px;font-size:13.5px}
+.addr-box .k{color:var(--muted);font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;padding-top:2px}
+.addr-box .v{overflow-wrap:anywhere;font-family:'Courier New',monospace}
+footer{padding:36px 0 56px;color:var(--muted);font-size:13px}
+</style>
+</head>
+<body>
+<nav><div class="nav-in">
+<div class="logo"><i>♞</i>Checkmate</div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="app.html">App</a>
+<a href="docs.html" class="on">Docs</a>
+</div>
+</div></nav>
+
+<div class="wrap">
+<div class="docs-head">
+<h1>Checkmate Docs</h1>
+<p>Wagered chess on BOT Chain testnet (chain 968).</p>
+<div class="toc">
+<a href="#deploy">Deployment</a><a href="#rules">Game rules</a><a href="#abi">Contract API</a><a href="#demo">Demo activity</a><a href="#build">Build &amp; verify</a>
+</div>
+</div>
+
+<section id="deploy">
+<h2>Deployment</h2>
+<div class="addr-box">
+<div class="k">Chain</div><div class="v">BOT Chain Testnet · chainId 968 · RPC https://rpc.bohr.life · explorer https://scan.bohr.life</div>
+<div class="k">Checkmate</div><div class="v"><a href="https://scan.bohr.life/address/0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74" target="_blank" rel="noopener">0xA3a4b15c9158dC6c93215A0c431859bad6Ac2C74</a> · verified ✓</div>
+<div class="k">Compiler</div><div class="v">solc 0.8.30+commit.73712a01 · optimizer 200 runs · evmVersion cancun · metadata.bytecodeHash none · flattened-code verification</div>
+<div class="k">Wager asset</div><div class="v">native BOT (msg.value) — both players stake equally at create/join</div>
+<div class="k">Client</div><div class="v">chess.js 1.4.0 (esm.sh) for move legality, SAN and FEN — runs entirely in the browser</div>
+</div>
+</section>
+
+<section id="rules">
+<h2>Game rules</h2>
+<p>The contract is a wager escrow + move log, not a chess engine. It never validates moves — it records the SAN you claim and the FEN you say results from it:</p>
+<pre>createGame(opponent, fen)  +value W   creator(White) escrows W
+joinGame(id)       +value W   opponent(Black) matches W → game live
+submitMove(id, san, fenAfter, isMate)
+    requires joined, your turn, not finished
+    records san + fenAfter, flips toMove
+    if isMate → finished, winner takes 2×W
+cancelGame(id)     White only, before join → refund W
+resign(id)         either player → opponent takes 2×W
+claimTimeout(id)   no move for 24h → side to move loses</pre>
+<p>Because both stakes are escrowed up front, the winner-takes-2× promise can't be broken by either player. A dishonest SAN is still visible to everyone in the event log — play honest or your opponent (and the explorer) will see it.</p>
+<h3>Reconstructing a game</h3>
+<p>Replay <code>MoveSubmitted</code> events in order from the initial FEN: every event carries <code>(gameId, by, moveIndex, san, toMoveAfter)</code>, and the contract's <code>games(id).lastFEN</code> is the authoritative latest position.</p>
+</section>
+
+<section id="abi">
+<h2>Contract API</h2>
+<table>
+<tr><th>Function</th><th>Signature</th><th>Description</th></tr>
+<tr><td class="mono">createGame</td><td class="mono">(address opponent, string initialFEN) payable</td><td>Creator becomes White, escrows wager</td></tr>
+<tr><td class="mono">joinGame</td><td class="mono">(uint256 gameId) payable</td><td>Opponent(Black) joins with matching wager</td></tr>
+<tr><td class="mono">submitMove</td><td class="mono">(uint256 gameId, string san, string fenAfter, bool isMate)</td><td>Records move; isMate ends game, pays 2×</td></tr>
+<tr><td class="mono">cancelGame</td><td class="mono">(uint256 gameId)</td><td>Creator cancels before join → refund</td></tr>
+<tr><td class="mono">resign</td><td class="mono">(uint256 gameId)</td><td>Player resigns → opponent paid 2×</td></tr>
+<tr><td class="mono">claimTimeout</td><td class="mono">(uint256 gameId)</td><td>24h without a move → side to move forfeits</td></tr>
+<tr><td class="mono">games</td><td class="mono">(uint256) → Game</td><td>Full struct: white, black, wager, moveCount, toMove, joined, finished, winner, lastFEN, createdAt, lastMoveAt</td></tr>
+<tr><td class="mono">getGame</td><td class="mono">(uint256) → (10 fields)</td><td>Same state minus createdAt</td></tr>
+<tr><td class="mono">activeGames</td><td class="mono">→ uint256</td><td>Games live right now</td></tr>
+<tr><td class="mono">totalWagered</td><td class="mono">→ uint256</td><td>Lifetime BOT escrowed</td></tr>
+</table>
+<h3>Events</h3>
+<table>
+<tr><th>Event</th><th>Fields</th></tr>
+<tr><td class="mono">GameCreated</td><td class="mono">(uint256 indexed gameId, address indexed white, address indexed black, uint256 wager)</td></tr>
+<tr><td class="mono">GameJoined</td><td class="mono">(uint256 indexed gameId, address indexed black)</td></tr>
+<tr><td class="mono">MoveSubmitted</td><td class="mono">(uint256 indexed gameId, address indexed by, uint256 moveIndex, string san, uint8 toMoveAfter)</td></tr>
+<tr><td class="mono">GameFinished</td><td class="mono">(uint256 indexed gameId, address indexed winner, uint256 wager, string reason)</td></tr>
+</table>
+</section>
+
+<section id="demo">
+<h2>Demo activity</h2>
+<p>Six demo transactions executed after deployment — all status ok, all methods decode by name on the explorer. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
+<table>
+<tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th></tr>
+<tr><td>1</td><td class="mono">createGame</td><td>Wallet A · White</td><td>Challenge with 0.1 BOT wager, standard start FEN</td></tr>
+<tr><td>2</td><td class="mono">joinGame</td><td>Wallet B · Black</td><td>Matches the 0.1 BOT wager — game goes live</td></tr>
+<tr><td>3</td><td class="mono">submitMove</td><td>Wallet A</td><td>1. f3</td></tr>
+<tr><td>4</td><td class="mono">submitMove</td><td>Wallet B</td><td>1… e5</td></tr>
+<tr><td>5</td><td class="mono">submitMove</td><td>Wallet A</td><td>2. g4</td></tr>
+<tr><td>6</td><td class="mono">submitMove</td><td>Wallet B</td><td>2… Qh4# — checkmate, Black collects 0.2 BOT</td></tr>
+</table>
+<p>Each project contract carries 7 explorer transactions total: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
+</section>
+
+<section id="build">
+<h2>Build &amp; verify</h2>
+<pre>cd botchain-builds/agent-vault
+node build5.mjs              # solc 0.8.30 → artifacts/checkmate/*.bin|.abi
+node deploy-5-testnet.mjs    # deploy to chain 968 → deployed-testnet-5.json
+node checkmate-demo.mjs      # funding + 6 demo txs (game ends Qh4#)
+node make-flat-5.mjs         # SPDX-dedupe flatten + byte-match recompile
+node submit-verify-5.mjs Checkmate   # POST flattened-code → scan.bohr.life</pre>
+<p>Flatten output lives in <code>agent-vault/verify5/*.flat.sol</code>. Each flat was recompiled and byte-matched against the deployed runtime before submission (<code>FLAT MATCH</code> ×7).</p>
+</section>
+
+<footer>Checkmate is a testnet deployment. Wagers are test BOT with no monetary value.</footer>
+</div>
+
+<script type="importmap">
+{"imports":{"ethers":"https://esm.sh/ethers@6.13.2","@reown/appkit":"https://esm.sh/@reown/appkit@1.8.21","@reown/appkit-adapter-ethers":"https://esm.sh/@reown/appkit-adapter-ethers@1.8.21","chess.js":"https://esm.sh/chess.js@1.4.0"}}
+</script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
