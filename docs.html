@@ -125,17 +125,17 @@ claimTimeout(id)   no move for 24h → side to move loses</pre>
 
 <section id="demo">
 <h2>Demo activity</h2>
-<p>Six testnet demo transactions executed after deployment — all status ok, all methods decode by name on the explorer. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
+<p>Six mainnet demo transactions executed after deployment — all status ok, all methods decode by name on BOTScan. The demo game is the four-move fool's mate: White (creator) opened <code>f3</code>, Black answered <code>e5</code>, White played <code>g4</code>, and Black delivered <code>Qh4#</code>.</p>
 <table>
-<tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th></tr>
-<tr><td>1</td><td class="mono">createGame</td><td>Wallet A · White</td><td>Challenge with 0.1 BOT wager, standard start FEN</td></tr>
-<tr><td>2</td><td class="mono">joinGame</td><td>Wallet B · Black</td><td>Matches the 0.1 BOT wager — game goes live</td></tr>
-<tr><td>3</td><td class="mono">submitMove</td><td>Wallet A</td><td>1. f3</td></tr>
-<tr><td>4</td><td class="mono">submitMove</td><td>Wallet B</td><td>1… e5</td></tr>
-<tr><td>5</td><td class="mono">submitMove</td><td>Wallet A</td><td>2. g4</td></tr>
-<tr><td>6</td><td class="mono">submitMove</td><td>Wallet B</td><td>2… Qh4# — checkmate, Black collects 0.2 BOT</td></tr>
+<tr><th>#</th><th>Method</th><th>Actor</th><th>Description</th><th>Tx</th></tr>
+<tr><td>1</td><td class="mono">createGame</td><td>Wallet A · White</td><td>Challenge with 0.005 BOT wager, standard start FEN</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xd21ba85d4cc71c1c4818647b674ecac2217d29916eb00371ad86ffcdbcedf50e" target="_blank" rel="noopener">0xd21ba85d…f50e</a></td></tr>
+<tr><td>2</td><td class="mono">joinGame</td><td>Wallet B · Black</td><td>Matches the 0.005 BOT wager — game goes live</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x4bfebc5076f37660d1880dc3aaae5e7c4368c6ea488609a5bba60874a74746d1" target="_blank" rel="noopener">0x4bfebc50…46d1</a></td></tr>
+<tr><td>3</td><td class="mono">submitMove</td><td>Wallet A</td><td>1. f3</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x4c7353b9f5890b6960410f339ad7a1bee9c9457365346022b6146bdb052f0e99" target="_blank" rel="noopener">0x4c7353b9…0e99</a></td></tr>
+<tr><td>4</td><td class="mono">submitMove</td><td>Wallet B</td><td>1… e5</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x5dfc36c1fcc078d0f9fe985cfcfa1682fe3acadc0f9c17af3cfa43a9dd19a628" target="_blank" rel="noopener">0x5dfc36c1…a628</a></td></tr>
+<tr><td>5</td><td class="mono">submitMove</td><td>Wallet A</td><td>2. g4</td><td class="mono"><a href="https://scan.botchain.ai/tx/0x07139682dcdd3d5ebd24c2c9a714cc69a1b9e16a347eae08fa0e2532b3488582" target="_blank" rel="noopener">0x07139682…8582</a></td></tr>
+<tr><td>6</td><td class="mono">submitMove</td><td>Wallet B</td><td>2… Qh4# — checkmate, Black collects 0.01 BOT</td><td class="mono"><a href="https://scan.botchain.ai/tx/0xeeb551c65775b5cba005093a5e560c296ab21fb9893dc69a67d481872a414e76" target="_blank" rel="noopener">0xeeb551c6…4e76</a></td></tr>
 </table>
-<p>Each project contract carries 7 testnet explorer transactions: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
+<p>Each project contract carries 7 mainnet explorer transactions: 1 deploy + 6 demo. The finished game #0 is visible live in the app.</p>
 </section>
 
 <section id="build">
