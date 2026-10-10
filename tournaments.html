@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkmate — Tournaments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0d0d;--fg:#f4f1e8;--mut:#a8a59c;--line:#2a2a2a;--card:#171717;--acc:#ff4d5e;--acc2:#ffd166;--onacc:#0d0d0d}@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d0d0d;--fg:#f4f1e8;--mut:#a8a59c;--line:#2a2a2a;--card:#171717;--acc:#ff4d5e;--acc2:#ffd166;--onacc:#0d0d0d}}@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f4f1e8;--fg:#0d0d0d;--mut:#5d5a52;--line:#d6d1c2;--card:#fbf9f2;--acc:#c1121f;--acc2:#8a6200;--onacc:#ffffff}}:root[data-theme="dark"]{--bg:#0d0d0d;--fg:#f4f1e8;--mut:#a8a59c;--line:#2a2a2a;--card:#171717;--acc:#ff4d5e;--acc2:#ffd166;--onacc:#0d0d0d}:root[data-theme="light"]{--bg:#f4f1e8;--fg:#0d0d0d;--mut:#5d5a52;--line:#d6d1c2;--card:#fbf9f2;--acc:#c1121f;--acc2:#8a6200;--onacc:#ffffff}
+:root{--panel:var(--card);--panel2:var(--card);--text:var(--fg);--muted:var(--mut);--accent:var(--acc);--accent2:var(--acc2);--line2:var(--line);--hairline:var(--line);--hairline-strong:var(--line);--danger:#ef4444}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.55;min-height:100vh}
+a{color:inherit;text-decoration:none}
+.mono{font-family:'Courier New',monospace}
+h1,h2,h3,.logo{font-family:'Fraunces',serif}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+nav{border-bottom:1px solid var(--line);background:rgba(10,18,12,.9);backdrop-filter:blur(8px);position:sticky;top:0;z-index:50}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:900;font-size:17px}
+.logo i{width:26px;height:26px;border-radius:6px;background:var(--accent);color:#0a120c;display:inline-flex;align-items:center;justify-content:center;font-size:17px;font-style:normal;line-height:1}
+.nav-links{display:flex;align-items:center;gap:22px;font-size:13.5px;color:var(--muted)}
+.nav-links a:hover,.nav-links a.on{color:var(--accent2)}
+.btn{font-family:'Inter',sans-serif;font-weight:600;font-size:13.5px;padding:10px 18px;border-radius:8px;border:none;cursor:pointer;transition:all .15s;min-height:40px}
+.btn-a{background:var(--accent);color:#0a120c}
+.btn-a:hover{background:var(--accent2)}
+.btn-g{background:transparent;color:var(--text);border:1px solid var(--line2)}
+.btn-g:hover{border-color:var(--accent2)}
+.btn-d{background:transparent;color:var(--danger);border:1px solid rgba(224,93,68,.5)}
+.btn-sm{padding:7px 13px;font-size:12.5px;min-height:34px}
+select#netSel,.sel{background:var(--panel);border:1px solid var(--line2);border-radius:8px;font-family:'Inter',sans-serif;font-size:12px;padding:9px;color:var(--text)}
+.ticker{display:grid;grid-template-columns:repeat(3,1fr);border-bottom:1px solid var(--line)}
+.ticker .cell{padding:16px 24px;border-right:1px solid var(--line);display:flex;justify-content:space-between;gap:12px}
+.ticker .cell:last-child{border-right:none}
+.ticker .k{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.ticker .v{font-size:15px;font-weight:700;color:var(--accent2)}
+.page-head{display:flex;justify-content:space-between;align-items:center;padding:30px 0 22px;gap:16px;flex-wrap:wrap}
+.page-head h1{font-size:27px;font-weight:900;letter-spacing:-.02em}
+.badge{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent2);border:1px solid var(--accent);border-radius:6px;padding:6px 12px}
+.main-grid{display:grid;grid-template-columns:1.6fr 1fr;gap:18px;align-items:start;padding-bottom:48px}
+@media(max-width:860px){.main-grid{grid-template-columns:1fr}.ticker{grid-template-columns:1fr}.ticker .cell{border-right:none;border-bottom:1px solid var(--line)}}
+.panel{background:var(--panel);border:1px solid var(--line2);border-radius:14px;margin-bottom:18px;overflow:hidden}
+.panel-head{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;border-bottom:1px solid var(--line)}
+.panel-head h3{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);font-family:'Inter',sans-serif}
+.panel-head .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 8px var(--accent2)}
+.row{display:grid;grid-template-columns:130px 1fr auto;gap:12px;align-items:center;padding:15px 18px;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row label{font-size:11.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.row input{width:100%;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:'Inter',sans-serif;font-size:14.5px;padding:10px 12px;min-height:42px}
+.row input:focus{outline:2px solid var(--accent2)}
+.row input.mono{font-family:'Courier New',monospace;font-size:13px}
+.kv{display:flex;justify-content:space-between;padding:12px 18px;border-bottom:1px solid var(--line);font-size:13.5px;color:var(--muted);gap:10px}
+.kv:last-child{border-bottom:none}
+.kv b{color:var(--text);font-weight:600;text-align:right}
+.hint{padding:10px 18px 16px;font-size:12.5px;color:var(--muted)}
+.msg{display:none;padding:8px 18px 14px;font-size:12.5px;color:var(--accent2)}
+.cup{padding:16px 18px;border-bottom:1px solid var(--line)}
+.cup:last-child{border-bottom:none}
+.cup-top{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap}
+.cup-top b{font-size:16.5px;font-family:'Fraunces',serif}
+.tag{font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:3px 9px;border-radius:5px;border:1px solid;white-space:nowrap}
+.tag.open{color:var(--gold,#f6e05e);border-color:rgba(246,224,94,.5)}
+.tag.live{color:var(--accent2);border-color:rgba(143,170,109,.55)}
+.tag.done{color:var(--muted);border-color:var(--line2)}
+.tag.cancel{color:var(--danger);border-color:rgba(239,68,68,.5)}
+.cup-meta{font-size:12.5px;color:var(--muted);display:flex;gap:14px;flex-wrap:wrap;margin-bottom:10px}
+.cup-meta .mono{color:var(--text);font-size:12px}
+.cup-actions{display:flex;gap:8px;flex-wrap:wrap}
+.match{padding:12px 18px;border-top:1px dashed var(--line);font-size:13px}
+.match .m-top{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap}
+.match .vs{font-weight:600}
+.match .vs .w{color:var(--accent2)}
+.match .rep{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap}
+.match .rep input{width:110px;background:var(--bg);border:1px solid var(--line);border-radius:8px;color:var(--text);font-family:'Courier New',monospace;font-size:13px;padding:7px 10px}
+footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-size:13px}
+footer a{color:var(--accent2)}
+.proof{display:block;max-width:440px;margin-top:18px;padding:16px 18px;background:var(--panel);border:1px solid var(--line2);border-radius:8px}
+.proof-title{font-family:ui-monospace,'Courier New',monospace;font-size:11px;font-weight:600;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px}
+.proof-grid{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-family:ui-monospace,'Courier New',monospace;font-size:12px;color:var(--muted)}
+.proof-grid .val{color:var(--accent);overflow-wrap:anywhere}
+.proof-links{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+.proof-link{font-family:ui-monospace,'Courier New',monospace;font-size:11px;color:var(--accent);border-bottom:1px solid var(--accent);text-decoration:none}
+</style>
+</head>
+<body>
+<nav><div class="wrap nav-in">
+<div class="logo"><i>♞</i>Checkmate</div>
+<div class="nav-links">
+<a href="index.html">Home</a>
+<a href="app.html">App</a>
+<a href="tournaments.html" class="on">Tournaments</a>
+<a href="docs.html">Docs</a>
+<select id="netSel"><option value="968">Testnet 968</option><option value="677" selected>Mainnet 677</option></select>
+<button class="btn btn-a" id="connectBtn">Connect wallet</button>
+</div>
+</div></nav>
+
+<div class="ticker">
+<div class="cell"><span class="k">Total cups</span><span class="v" id="tCups">—</span></div>
+<div class="cell"><span class="k">Open cups</span><span class="v" id="tOpen">—</span></div>
+<div class="cell"><span class="k">Your BOT balance</span><span class="v" id="tBal">—</span></div>
+</div>
+
+<div class="wrap">
+<div class="page-head">
+<h1>Knockout cups</h1>
+<span class="badge">Dream-league multiplayer · 5% fee</span>
+</div>
+
+<div class="main-grid">
+<div>
+<div class="panel">
+<div class="panel-head"><h3>Cups</h3><div class="dot"></div></div>
+<div id="cupList"><div class="hint">Loading cups…</div></div>
+</div>
+</div>
+
+<div>
+<div class="panel">
+<div class="panel-head"><h3>Create a cup</h3><div class="dot"></div></div>
+<div class="row"><label>Name</label><input id="nName" placeholder="Friday Night Cup"></div>
+<div class="row"><label>Entry (BOT)</label><input id="nFee" type="number" step="any" placeholder="0.01"></div>
+<div class="row"><label>Size</label><select id="nSize" class="sel"><option value="4">4 players</option><option value="8">8 players</option><option value="16">16 players</option></select></div>
+<div class="row" style="border-bottom:none"><label>Duration (h)</label><input id="nDur" type="number" placeholder="168"></div>
+<div class="row" style="border-bottom:none;grid-template-columns:1fr auto"><span class="hint" style="padding:0">Cup auto-starts when full. Anyone can create.</span><button class="btn btn-a" id="createCupBtn">Create →</button></div>
+<div class="msg" id="cupMsg"></div>
+</div>
+
+<div class="panel">
+<div class="panel-head"><h3>How cups work</h3><div class="dot"></div></div>
+<div class="kv"><span>Entry fee</span><b>native BOT, escrowed in cup</b></div>
+<div class="kv"><span>Bracket games</span><b>ordinary Checkmate games</b></div>
+<div class="kv"><span>Reporting</span><b>trustless — winner read on-chain</b></div>
+<div class="kv"><span>Champion prize</span><b>pot minus 5% fee</b></div>
+<div class="kv"><span>Stuck match</span><b>arbiter (owner) resolves</b></div>
+<div class="kv"><span>Pre-start cancel</span><b>full refunds, owner only</b></div>
+<div class="hint">Play bracket games in the <a href="app.html" style="color:var(--accent2)">App</a>, then paste the finished game ID into the match's Report box.</div>
+</div>
+</div>
+</div>
+
+<footer><div class="wrap">
+<p style="margin-bottom:2px">Checkmate Tournaments — knockout cups on BOT Chain. Finished by the Genesis Cup on mainnet.</p>
+<div class="proof">
+<div class="proof-title">Proof on BOT Mainnet</div>
+<div class="proof-grid">
+<span>Chain ID</span><span class="val">677</span>
+<span>Checkmate</span><span class="val">0x222D901AFE6381CE2529b5B9124091a137b4c9bd</span>
+<span>Tournament</span><span class="val">0xD3c47e18d5F919Bc08DA6fA73A40611506577000</span>
+</div>
+<div class="proof-links">
+<a href="https://botchain.ai" target="_blank" rel="noopener" class="proof-link">BOT Chain Website &#8599;</a>
+<a href="https://scan.botchain.ai/" target="_blank" rel="noopener" class="proof-link">BOTScan Explorer &#8599;</a>
+</div>
+</div>
+<p style="margin-top:14px"><a href="index.html">Home</a> · <a href="app.html">Play chess →</a> · <a href="docs.html">Docs</a></p>
+</div></footer>
+
+<script type="importmap">
+{"imports":{"ethers":"https://esm.sh/ethers@6.13.2","@reown/appkit":"https://esm.sh/@reown/appkit@1.8.21","@reown/appkit-adapter-ethers":"https://esm.sh/@reown/appkit-adapter-ethers@1.8.21"}}
+</script>
+<script type="module">
+import { ethers } from 'ethers';
+import { createAppKit } from '@reown/appkit';
+import { EthersAdapter } from '@reown/appkit-adapter-ethers';
+
+const PROJECT_ID = 'f018499b1e4a94d961ab67aeeeff3254';
+const CONTRACTS = {
+  968: { tm: '0x201c23993443Da1fD85155E99472914809eEcD26' },
+  677: { tm: '0xD3c47e18d5F919Bc08DA6fA73A40611506577000' },
+};
+const TM_ABI = [
+  'function totalCups() view returns (uint256)',
+  'function getCup(uint256) view returns (string,uint256,uint8,uint64,address[],bool,bool,bool,address)',
+  'function matchCount(uint256) view returns (uint256)',
+  'function getMatch(uint256,uint256) view returns (uint8,address,address,uint256,bool,address,bool)',
+  'function prizeOf(uint256) view returns (uint256,uint256)',
+  'function createTournament(string,uint256,uint8,uint64) returns (uint256)',
+  'function register(uint256) payable',
+  'function reportMatch(uint256,uint256,uint256)',
+  'function claimPrize(uint256)',
+  'function cancelCup(uint256)',
+];
+const $ = (id) => document.getElementById(id);
+let currentChainId = 677, account = null, openCup = -1;
+
+const appkit = createAppKit({
+  adapters: [new EthersAdapter()],
+  networks: [{ id: 677, name: 'BOT Mainnet', nativeCurrency: { name: 'BOT', symbol: 'BOT', decimals: 18 }, rpcUrls: { default: { http: ['https://rpc.botchain.ai'] } } }, { id: 968, name: 'BOT Testnet', nativeCurrency: { name: 'BOT', symbol: 'BOT', decimals: 18 }, rpcUrls: { default: { http: ['https://rpc.bohr.life'] } } }],
+  projectId: PROJECT_ID,
+  features: { analytics: false },
+});
+async function getSigner() {
+  if (typeof appkit !== 'undefined' && appkit && typeof appkit.getWalletProvider === 'function') {
+    const wp = appkit.getWalletProvider('eip155') || appkit.getWalletProvider();
+    if (wp) return await new ethers.BrowserProvider(wp).getSigner();
+  }
+  throw new Error('Connect a wallet first');
+}
+function short(a) { return !a ? '—' : a.slice(0, 6) + '…' + a.slice(-4); }
+function roundName(size, round, totalRounds) {
+  const fromEnd = totalRounds - 1 - round;
+  if (fromEnd === 0) return 'Final';
+  if (fromEnd === 1) return 'Semifinals';
+  if (fromEnd === 2) return 'Quarterfinals';
+  return 'Round of ' + (size >> (totalRounds - 1 - round));
+}
+function msg(id, t, ok) {
+  const el = $(id); el.style.display = 'block';
+  el.style.color = ok === false ? 'var(--danger)' : 'var(--accent2)';
+  el.textContent = t;
+}
+async function provider() {
+  const rpc = currentChainId === 968 ? 'https://rpc.bohr.life' : 'https://rpc.botchain.ai';
+  return new ethers.JsonRpcProvider(rpc);
+}
+async function tmRead() {
+  const c = CONTRACTS[currentChainId];
+  if (!c) return null;
+  return new ethers.Contract(c.tm, TM_ABI, await provider());
+}
+async function refresh() {
+  const t = await tmRead();
+  if (!t) { $('cupList').innerHTML = '<div class="hint">No tournament on this network here. Switch chain above.</div>'; return; }
+  const n = Number(await t.totalCups());
+  $('tCups').textContent = n;
+  let open = 0;
+  const cups = [];
+  for (let i = 0; i < n; i++) {
+    const c = await t.getCup(i);
+    const mc = Number(await t.matchCount(i));
+    cups.push({ id: i, name: c[0], fee: c[1], size: Number(c[2]), players: c[4], started: c[5], finished: c[6], cancelled: c[7], champion: c[8], matches: mc });
+    if (!c[5] && !c[7]) open++;
+  }
+  $('tOpen').textContent = open;
+  if (account) {
+    try { $('tBal').textContent = Number(ethers.formatEther(await (await provider()).getBalance(account))).toFixed(4) + ' BOT'; } catch (e) {}
+  }
+  if (!cups.length) { $('cupList').innerHTML = '<div class="hint">No cups yet — create the first one →</div>'; return; }
+  let html = '';
+  cups.slice().reverse().forEach((c) => {
+    const status = c.cancelled ? ['cancel', 'Cancelled'] : c.finished ? ['done', 'Finished'] : c.started ? ['live', 'Live'] : ['open', 'Open ' + c.players.length + '/' + c.size];
+    const prize = ethers.formatEther(c.fee * BigInt(c.players.length));
+    const isChamp = account && c.champion && c.champion.toLowerCase() === account.toLowerCase();
+    const entered = account && c.players.some((p) => p.toLowerCase() === (account || '').toLowerCase());
+    html += '<div class="cup" data-cup="' + c.id + '">'
+      + '<div class="cup-top"><b>#' + c.id + ' ' + escapeHtml(c.name) + '</b><span class="tag ' + status[0] + '">' + status[1] + '</span></div>'
+      + '<div class="cup-meta"><span>Entry <span class="mono">' + ethers.formatEther(c.fee) + ' BOT</span></span><span>Pot <span class="mono">' + prize + ' BOT</span></span>'
+      + (c.champion && c.champion !== ethers.ZeroAddress ? '<span>Champion <span class="mono">' + short(c.champion) + '</span></span>' : '') + '</div>'
+      + '<div class="cup-actions">'
+      + (!c.started && !c.cancelled && !entered ? '<button class="btn btn-a btn-sm" data-act="register" data-cup="' + c.id + '">Register (' + ethers.formatEther(c.fee) + ' BOT)</button>' : '')
+      + (c.started ? '<button class="btn btn-g btn-sm" data-act="matches" data-cup="' + c.id + '">' + (openCup === c.id ? 'Hide matches' : 'View matches') + '</button>' : '')
+      + (isChamp && c.finished ? '<button class="btn btn-a btn-sm" data-act="claim" data-cup="' + c.id + '">Claim prize</button>' : '')
+      + (!c.started && !c.cancelled ? '<button class="btn btn-d btn-sm" data-act="cancel" data-cup="' + c.id + '">Cancel (owner)</button>' : '')
+      + '</div><div class="matches" id="m-' + c.id + '"></div></div>';
+  });
+  $('cupList').innerHTML = html;
+  if (openCup >= 0) await showMatches(openCup);
+}
+function escapeHtml(s) { return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+async function showMatches(cupId) {
+  const t = await tmRead(); if (!t) return;
+  const box = $('m-' + cupId); if (!box) return;
+  const cup = await t.getCup(cupId);
+  const size = Number(cup[2]);
+  const totalRounds = Math.log2(size);
+  const mc = Number(await t.matchCount(cupId));
+  let html = '';
+  for (let i = 0; i < mc; i++) {
+    const m = await t.getMatch(cupId, i);
+    const r = Number(m[0]);
+    const done = m[6];
+    html += '<div class="match"><div class="m-top"><span class="vs">' + escapeHtml(roundName(size, r, totalRounds)) + ' · <span class="' + (done && m[5].toLowerCase() === m[1].toLowerCase() ? 'w' : '') + '">' + short(m[1]) + '</span> vs <span class="' + (done && m[5].toLowerCase() === m[2].toLowerCase() ? 'w' : '') + '">' + short(m[2]) + '</span></span>'
+      + '<span class="tag ' + (done ? 'done' : 'live') + '">' + (done ? 'Won by ' + short(m[5]) + (m[4] ? ' · game #' + m[3] : ' · arbiter') : 'Open') + '</span></div>'
+      + (!done ? '<div class="rep"><input class="mono" id="g-' + cupId + '-' + i + '" placeholder="game ID"><button class="btn btn-g btn-sm" data-act="report" data-cup="' + cupId + '" data-m="' + i + '">Report →</button><span class="hint" style="padding:6px 0 0">finished Checkmate game between these two players</span></div>' : '')
+      + '</div>';
+  }
+  box.innerHTML = html || '<div class="hint">No matches yet.</div>';
+}
+async function write(fn, args, value, okMsg, msgId) {
+  try {
+    const s = await getSigner();
+    const t = new ethers.Contract(CONTRACTS[currentChainId].tm, TM_ABI, s);
+    const tx = await t[fn](...args, value !== undefined ? { value } : {});
+    msg(msgId || 'cupMsg', 'Sent: ' + tx.hash.slice(0, 18) + '… waiting…');
+    await tx.wait();
+    msg(msgId || 'cupMsg', okMsg || 'Confirmed ✓');
+    await refresh();
+  } catch (e) {
+    msg(msgId || 'cupMsg', 'Failed: ' + (e.shortMessage || e.reason || e.message || e).toString().slice(0, 160), false);
+  }
+}
+$('cupList').addEventListener('click', async (e) => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const cup = Number(b.dataset.cup), act = b.dataset.act;
+  if (act === 'register') {
+    const t = await tmRead(); const c = await t.getCup(cup);
+    await write('register', [cup], c[1], 'Registered ✓ good luck.');
+  } else if (act === 'matches') {
+    openCup = openCup === cup ? -1 : cup;
+    await refresh();
+  } else if (act === 'report') {
+    const i = Number(b.dataset.m);
+    const gid = $('g-' + cup + '-' + i).value.trim();
+    if (!/^\d+$/.test(gid)) { msg('cupMsg', 'Enter a numeric game ID.', false); return; }
+    await write('reportMatch', [cup, i, BigInt(gid)], undefined, 'Match reported ✓');
+  } else if (act === 'claim') {
+    await write('claimPrize', [cup], undefined, 'Prize claimed ✓');
+  } else if (act === 'cancel') {
+    if (!confirm('Cancel cup #' + cup + '? All entries refund. Owner only.')) return;
+    await write('cancelCup', [cup], undefined, 'Cup cancelled, entries refunded.');
+  }
+});
+$('createCupBtn').addEventListener('click', async () => {
+  const name = $('nName').value.trim();
+  const fee = $('nFee').value.trim();
+  const size = Number($('nSize').value);
+  const dur = $('nDur').value.trim() || '168';
+  if (!name || !fee || Number(fee) <= 0) { msg('cupMsg', 'Name + positive entry fee required.', false); return; }
+  await write('createTournament', [name, ethers.parseEther(fee), size, BigInt(dur)], undefined, 'Cup created ✓');
+});
+function initWallet() {
+  if (!$('connectBtn')) return;
+  appkit.subscribeAccount((a) => {
+    account = a.address || null;
+    $('connectBtn').textContent = account ? account.slice(0, 6) + '…' + account.slice(-4) : 'Connect wallet';
+    refresh();
+  });
+  appkit.subscribeNetwork((n) => {
+    if (n && n.chainId) { currentChainId = Number(n.chainId); const s = $('netSel'); if (s) s.value = String(currentChainId); }
+    refresh();
+  });
+  $('connectBtn').addEventListener('click', () => appkit.open());
+  if ($('netSel')) {
+    $('netSel').addEventListener('change', (e) => {
+      const id = Number(e.target.value);
+      try { appkit.switchNetwork({ id }); } catch (err) {}
+      currentChainId = id;
+      refresh();
+    });
+  }
+}
+initWallet();
+refresh();
+setInterval(() => { const t = document.hidden ? null : refresh(); }, 20000);
+</script>
+<script>
+(function(){try{var s=localStorage.getItem('botchain-theme');if(s)document.documentElement.dataset.theme=s;}catch(e){}
+var b=document.createElement('button');b.id='themeBtn';b.title='Theme';b.textContent=document.documentElement.dataset.theme==='light'?'\u261E':'\u2600';
+b.style.cssText='border:1px solid var(--line2,var(--line));background:transparent;color:inherit;border-radius:99px;width:38px;height:38px;font-size:15px;cursor:pointer;margin-left:10px';
+b.onclick=function(){var n=document.documentElement.dataset.theme==='light'?'dark':'light';document.documentElement.dataset.theme=n;try{localStorage.setItem('botchain-theme',n)}catch(e){}b.textContent=n==='light'?'\u261E':'\u2600';};
+var nav=document.querySelector('nav');if(nav)nav.appendChild(b);})();
+</script>
+</body>
+</html>
