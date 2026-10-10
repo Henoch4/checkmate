@@ -114,6 +114,22 @@ let appkit = null;
 function rpc() { return new ethers.JsonRpcProvider(currentChainId === 677 ? 'https://rpc.botchain.ai' : 'https://rpc.bohr.life'); }
 const short = (a) => (a ? a.slice(0, 6) + '…' + a.slice(-4) : '—');
 
+function getProvider() {
+  try {
+    if (typeof appkit !== 'undefined' && appkit && typeof appkit.getWalletProvider === 'function') {
+      const p = appkit.getWalletProvider('eip155') || appkit.getWalletProvider();
+      if (p) return p;
+    }
+  } catch (e) {}
+  return null;
+}
+async function getSigner() {
+  const wp = getProvider();
+  if (!wp) { try { appkit.open(); } catch (e) {} return null; }
+  return new ethers.BrowserProvider(wp).getSigner();
+}
+
+
 function initAppKit() {
   const adapter = new EthersAdapter();
   appkit = new AppKit({
@@ -236,7 +252,7 @@ if ($("#gm")) $("#gm").addEventListener("click", async (e) => {
   if (!g) return;
   try {
     const c = CHAINS[currentChainId];
-    const s = await appkit.getSigner();
+    const s = await getSigner(); if (!s) return;;
     const cm = new ethers.Contract(c.cm, CM_ABI, s);
     toast("Joining with " + fmtE(g.wager) + " BOT…");
     await (await cm.joinGame(g.id, { value: g.wager, ...GAS })).wait();
@@ -255,7 +271,7 @@ if (cg) cg.addEventListener("click", async () => {
   if (!account) { appkit.open(); return; }
   try {
     const c = CHAINS[currentChainId];
-    const s = await appkit.getSigner();
+    const s = await getSigner(); if (!s) return;;
     const cm = new ethers.Contract(c.cm, CM_ABI, s);
     toast("Creating game…");
     await (await cm.createGame(opp, START_FEN, { value: ethers.parseEther(String(w)), ...GAS })).wait();

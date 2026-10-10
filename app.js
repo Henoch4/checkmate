@@ -43,6 +43,21 @@ const $ = (id) => document.getElementById(id);
 const fmt = (n, d = 18) => Number(ethers.formatUnits(n, d)).toLocaleString(undefined, { maximumFractionDigits: 4 });
 const short = (a) => a.slice(0, 6) + '…' + a.slice(-4);
 
+function getProvider() {
+  try {
+    if (typeof appkit !== 'undefined' && appkit && typeof appkit.getWalletProvider === 'function') {
+      const p = appkit.getWalletProvider('eip155') || appkit.getWalletProvider();
+      if (p) return p;
+    }
+  } catch (e) {}
+  return null;
+}
+async function getSigner() {
+  const wp = getProvider();
+  if (!wp) { try { appkit.open(); } catch (e) {} return null; }
+  return new ethers.BrowserProvider(wp).getSigner();
+}
+
 let appkit = null;
 let readProvider;
 let currentChainId = 677;
@@ -50,6 +65,8 @@ let account = null;
 
 let games = [];
 let selId = null;
+let lastSeenGame = null;
+let lastSeenKey = null;
 let chess = null;
 let selSq = null;
 let legalDests = [];
@@ -74,6 +91,8 @@ function initAppKit() {
   if ($('netSel')) {
     $('netSel').addEventListener('change', (e) => {
       currentChainId = Number(e.target.value);
+      readProvider = new ethers.JsonRpcProvider(currentChainId === 677 ? 'https://rpc.botchain.ai' : 'https://rpc.bohr.life');
+      games = []; selId = null; chess = null; pending = null; lastSeenGame = null; lastSeenKey = null;
       refresh();
     });
   }
@@ -381,6 +400,21 @@ async function refresh() {
       }
     } else { chess = null; pending = null; selSq = null; legalDests = []; }
 
+    // ---- live move alerts (5s poll, board-only refresh) ----
+    try {
+      if (g && account) {
+        const key = g.id + ':' + Number(g.moveCount) + ':' + (g.finished ? 'F' : '');
+        if (lastSeenGame === g.id && lastSeenKey && lastSeenKey !== key) {
+          const info = await lastMoveInfo(g.id);
+          if (info && info.by.toLowerCase() !== account.toLowerCase()) {
+            if (g.finished) showMsg('actMsg', 'Game over — ' + (g.winner.toLowerCase() === account.toLowerCase() ? 'you won!' : short(g.winner) + ' won'));
+            else showMsg('actMsg', 'Opponent played ' + info.san + ' — your move!');
+          }
+        }
+        lastSeenGame = g.id; lastSeenKey = key;
+      } else if (g) { lastSeenGame = g.id; lastSeenKey = g.id + ':' + Number(g.moveCount) + ':' + (g.finished ? 'F' : ''); }
+    } catch { /* alerts are best-effort */ }
+
     renderGameList();
     renderState();
     renderPending();
@@ -391,6 +425,19 @@ async function refresh() {
     const el = $('gameList');
     if (el) el.innerHTML = '<div class="hint">Failed to load games: ' + String(e.message || e).slice(0, 120) + '</div>';
   }
+}
+
+async function lastMoveInfo(gameId) {
+  try {
+    const c = CONTRACTS[currentChainId];
+    const topic = ethers.id('MoveSubmitted(uint256,address,uint256,string,uint8)');
+    const idTopic = '0x' + gameId.toString(16).padStart(64, '0');
+    const logs = await readProvider.getLogs({ address: c.cm, topics: [topic, idTopic], fromBlock: 0, toBlock: 'latest' });
+    if (!logs.length) return null;
+    const iface = new ethers.Interface(CM_ABI);
+    const e = iface.parseLog(logs[logs.length - 1]);
+    return { by: e.args[1], san: e.args[3] };
+  } catch { return null; }
 }
 
 async function selectGame(id) {
@@ -415,7 +462,7 @@ async function selectGame(id) {
 async function signerOrAlert() {
   if (!account) { appkit?.open(); return null; }
   if (!CONTRACTS[currentChainId]) { alert('No contracts on this network in this app. Switch to BOT Chain 677 or Testnet 968.'); return null; }
-  const s = await appkit?.getSigner();
+  const s = await getSigner();
   if (!s) { appkit?.open(); return null; }
   return s;
 }
@@ -430,7 +477,7 @@ async function doCreate() {
   if (opp.toLowerCase() === (await s.getAddress()).toLowerCase()) return showMsg('gmMsg', 'Opponent must not be you');
   if (!wager || Number(wager) <= 0) return showMsg('gmMsg', 'Enter a wager > 0');
   try { new Chess(fen); } catch (e) { return showMsg('gmMsg', 'Invalid FEN'); }
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('gmMsg', 'Sending createGame…');
   try {
     const tx = await cm.createGame(opp, fen, { value: ethers.parseEther(wager) });
@@ -446,7 +493,7 @@ async function doJoin() {
   if (!g) return;
   const s = await signerOrAlert();
   if (!s) return;
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('actMsg', 'Joining with ' + fmt(g.wager) + ' BOT…');
   try {
     const tx = await cm.joinGame(g.id, { value: g.wager });
@@ -462,7 +509,7 @@ async function doCancel() {
   const s = await signerOrAlert();
   if (!s) return;
   if (!confirm('Cancel game #' + g.id + '? Your wager is refunded.')) return;
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('actMsg', 'Cancelling…');
   try {
     const tx = await cm.cancelGame(g.id);
@@ -478,7 +525,7 @@ async function doResign() {
   const s = await signerOrAlert();
   if (!s) return;
   if (!confirm('Resign game #' + g.id + '? Your opponent takes the pot.')) return;
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('actMsg', 'Resigning…');
   try {
     const tx = await cm.resign(g.id);
@@ -493,7 +540,7 @@ async function doTimeout() {
   if (!g) return;
   const s = await signerOrAlert();
   if (!s) return;
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('actMsg', 'Claiming timeout…');
   try {
     const tx = await cm.claimTimeout(g.id);
@@ -509,7 +556,7 @@ async function doSubmit() {
   if (!g) return;
   const s = await signerOrAlert();
   if (!s) return;
-  const cm = new ethers.Contract(CONTRACTS[968].cm, CM_ABI, s);
+  const cm = new ethers.Contract(CONTRACTS[currentChainId].cm, CM_ABI, s);
   showMsg('actMsg', 'Submitting ' + pending.san + '…');
   try {
     const tx = await cm.submitMove(g.id, pending.san, pending.fen, pending.isMate);
@@ -545,6 +592,6 @@ function boot() {
   $('submitBtn')?.addEventListener('click', doSubmit);
   $('undoBtn')?.addEventListener('click', undoLocal);
   refresh();
-  setInterval(refresh, 25000);
+  setInterval(refresh, 5000);
 }
 boot();
