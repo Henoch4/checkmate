@@ -45,7 +45,7 @@ select#netSel{background:var(--card);border:1px solid var(--fg);padding:9px 12px
 <div class="proof-title">Proof on BOT Mainnet</div>
 <div class="proof-grid">
 <span>Chain ID</span><span class="val">677</span>
-<span>Contract</span><span class="val">0x222D901AFE6381CE2529b5B9124091a137b4c9bd</span>
+<span>Contract</span><span class="val">0x222D901AFE6381CE2529bB9124091a137b4c9bd</span>
 </div>
 <div class="proof-links">
 <a href="https://botchain.ai" target="_blank" rel="noopener" class="proof-link">BOT Chain Website &#8599;</a>
@@ -187,18 +187,19 @@ async function refresh() {
     const topic = ethers.id('GameCreated(uint256,address,address,uint256)');
     const logs = await p.getLogs({ address: c.cm, topics: [topic], fromBlock: 0, toBlock: 'latest' });
     const iface = new ethers.Interface(CM_ABI);
-    lobby = [];
+    const list = [];
     for (const l of logs.slice(-8).reverse()) {
       try {
         const e = iface.parseLog(l);
         const id = Number(e.args[0]);
         const g = await cm.games(id);
-        lobby.push({
+        list.push({
           id, white: e.args[1], black: e.args[2], wager: e.args[3],
           joined: g[5], finished: g[6], winner: g[7], lastMoveAt: Number(g[10]),
         });
       } catch { /* skip */ }
     }
+    lobby = list;
     renderLobby();
   } catch (e) { console.error(e); }
 }
