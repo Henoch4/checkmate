@@ -99,9 +99,9 @@ footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-s
 <h2 class="sec-t">Why Checkmate</h2>
 <p class="sec-s">Chess rules stay honest because the stakes do.</p>
 <div class="grid3">
-<div class="card"><div class="ic">💰</div><h3>Stakes escrowed on-chain</h3><p>Both players lock the same wager in the contract before a single move. The winner takes 2×; nobody can walk away from a losing position with their stake.</p></div>
-<div class="card"><div class="ic">⏳</div><h3>24-hour move clock</h3><p>If your opponent goes quiet for a day, claimTimeout forfeits the game to you. Stalling is not a strategy.</p></div>
-<div class="card"><div class="ic">♟</div><h3>Portable game state</h3><p>Moves are recorded as standard SAN plus the resulting FEN, so the position is fully reconstructable — in this app or anywhere else.</p></div>
+<div class="card"><div class="ic">💰</div><h3>Winner takes the pot</h3><p>Both players lock the same wager in the contract before a single move. The winner takes 2×; nobody can walk away from a losing position with their stake.</p></div>
+<div class="card"><div class="ic">⏳</div><h3>24-hour move clock</h3><p>If your opponent goes quiet for a day, you can claim the win and the pot. Stalling is not a strategy.</p></div>
+<div class="card"><div class="ic">♟</div><h3>Portable game state</h3><p>The whole game history lives on-chain, so any game can be replayed and verified — here or anywhere.</p></div>
 </div>
 </section>
 
@@ -109,8 +109,8 @@ footer{border-top:1px solid var(--line);padding:44px 0;color:var(--muted);font-s
 <h2 class="sec-t">How it works</h2>
 <p class="sec-s">Three steps from challenge to payout.</p>
 <div class="steps">
-<div class="step"><b>01</b><h4>Create &amp; stake</h4><p>Name your opponent and send the wager with <code style="font-family:'Courier New',monospace">createGame</code>. Your BOT sits in the contract waiting for them.</p></div>
-<div class="step"><b>02</b><h4>Join &amp; play</h4><p>The opponent matches the wager to join. Then it's ordinary chess — moves are submitted as SAN with the resulting FEN.</p></div>
+<div class="step"><b>01</b><h4>Create &amp; stake</h4><p>Name your opponent and lock in your wager — it waits safely until they accept.</p></div>
+<div class="step"><b>02</b><h4>Join &amp; play</h4><p>The opponent matches your wager to join — then it’s just chess, with every move written to the chain.</p></div>
 <div class="step"><b>03</b><h4>Mate or fold</h4><p>Checkmate pays the winner the full pot. Resign and timeout do the same. Cancel before join refunds the creator.</p></div>
 </div>
 </section>
